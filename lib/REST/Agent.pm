@@ -102,4 +102,26 @@ sub _build_url {
 	my $path = $url->full_path
 }
 
+# https://www.google.com:80/some/path/to/file?foo=bar&mom=dad#
+# //www.google.com:80/some/path/to/file?foo=bar&mom=dad#
+# //www.google.com:80/some/path/to/file?foo=bar&mom=dad
+# //www.google.com:80/some/path/to/file
+# //www.google.com/some/path/to/file
+# www.google.com/some/path/to/file
+# www.google.com
+#
+
+my ($scheme, $domain, $port, $path, $query, $fragment) = $url =~ m|^ (?:(https?)://)? ([^:/?#]*) (?::([^/?#])*)? (/[^?#]*)? (?:\?([^#]*))? (?:#(.*))? $|x;
+join('',
+	$scheme ? "$scheme://" : 'http://',
+	$domain,
+	$port ? ":$port" : '',
+	$path ? $path : '/',
+	$query ? "?$query" : '',
+	$fragment ? "#$fragment" : '',
+);
+
+
+my $url =~ m|((?:https?:)?//)?([^/:]+(?::\d+))|
+
 1;
